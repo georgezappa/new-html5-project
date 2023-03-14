@@ -1,61 +1,78 @@
 {
   "name": "new-html5-project",
   "version": "1.0.0",
-  "description": "",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "www": "./bin/www.js"
+  },
   "main": "app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "cross-env NODE_ENV=dev start watch:sass",
+    "clean": "rm -rf public",
+    "makeDir": "mkdir -p public/js public/images public/views",
+    "copy:files": "cp -t public site.webmanifest",
+    "doCompile:ejs": "npm-run-all compile:* ",
+    "compile:index": "ejs views/index.ejs -f data.json -o public/views/index.html ",
+    "compile:error": "ejs views/index.ejs -f data.json -o public/views/error.html ",
+    "compile:404": "ejs views/index.ejs -f data.json -o public/views/404.html ",
+    "compile:contact": "ejs views/index.ejs -f data.json -o public/views/contact.html ",
+    "copy:images": "cp -r  -t public src/images",
+    "doCompile:sass": "node-sass src/styles/styles.scss src/styles/styles.css",
+    "doCompress:css": "node-sass src/styles/styles.css public/styles/styles.min.css --output-style compressed",
+    "build:css": "npm-run-all doCompile:sass doCompress:css",
+    "build:js": "./node_modules/.pnpm/terser@5.16.5/node_modules/terser/bin/terser src/js/*.js -c -m -o public/js/bundled.min.js",
+    "build": "npm-run-all clean makeDir copy:files doCompile:ejs copy:images build:css build:js",
+    "watch:sass": "build -w"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~4.3.4",
+    "ejs": "~3.1.8",
+    "eslint-config-standard": "17.0.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "express": "^4.18.2",
+    "http-errors": "~2.0.0",
+    "morgan": "~1.10.0",
+    "node-sass-middleware": "1.0.1",
+    "sqlite3": "^5.1.6"
+  },
+  "description": "My attempt once again to do a web site wth sass and express",
+  "directories": {
+    "test": "tests"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/georgezappa/new-html5-project.git"
   },
-  "scripts": {
-    "clean": "rm -rf dist/*",
-    "start": "node node_modules/http-server/bin/http-server -o",
-    "build": "npm run clean && npm run build:parcel",
-    "test": "jest"
-  },
   "keywords": [
     "express",
-    "sass",
-    "nodejs",
-    "bcryptjs",
-    "ejs",
-    "passport",
-    "passport-local",
-    "sqlite"
+    "sass"
   ],
-  "author": "georgezappa",
-  "license": "MIT-0",
+  "author": "george zappa",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/georgezappa/new-html5-project/issues"
   },
   "homepage": "https://github.com/georgezappa/new-html5-project#readme",
-  "dependencies": {
-    "express": "^4.18.2",
-    "morgan": "^1.10.0",
-    "sass": "^1.58.3",
-    "sqlite3": "5.1.4"
-  },
   "devDependencies": {
-    "bcryptjs": "^2.4.3",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/debug": "^4.1.7",
+    "@types/express": "^4.17.17",
+    "@types/http-errors": "^2.0.1",
+    "@types/morgan": "^1.9.4",
+    "@types/node-sass-middleware": "^0.0.32",
+    "autoprefixer": "^10.4.13",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.0.3",
-    "ejs": "^3.1.8",
     "eslint": "^8.35.0",
-    "express-session": "^1.17.3",
-    "http-server": "^14.1.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
     "jest": "^29.4.3",
-    "nodemon": "^2.0.20",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "browserslist": [
-    "> 0.2%",
-    "last 2 versions",
-    "Firefox ESR",
-    "not dead",
-    "not IE 11"
-  ]
+    "node-sass": "^8.0.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.21",
+    "terser": "^5.16.5"
+  }
 }
